@@ -1,0 +1,79 @@
+<div class="max-w-2xl mx-auto p-6 bg-white rounded shadow-sm mt-10 border border-gray-200">
+  @if (showSuccess()) {
+    <div class="text-center py-10 text-green-600">
+      <h2 class="text-2xl font-bold mb-4">نجاح!</h2>
+      <p class="text-lg">تم استلام طلبك، سيتم الرد خلال 24 ساعة</p>
+      <a href="/" class="mt-6 inline-block bg-primary text-white px-4 py-2 rounded">العودة للرئيسية</a>
+    </div>
+  } @else if (showOtp()) {
+    <div class="text-center py-10">
+      <h2 class="text-2xl font-bold mb-4">التحقق من البريد الإلكتروني</h2>
+      <p class="mb-4">أدخل الرمز المكون من 6 أرقام المرسل إليك</p>
+      <form [formGroup]="wizardForm" (ngSubmit)="verifyOtp()" class="flex flex-col items-center">
+        <input type="text" formControlName="otp" maxlength="6" class="border p-2 rounded w-32 text-center tracking-widest text-lg mb-4 focus:outline-none focus:border-primary">
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded">تحقق</button>
+      </form>
+    </div>
+  } @else {
+    <div>
+      <h2 class="text-xl font-bold mb-2">تقديم طلب كتاجر (الخطوة {{ currentStep() }} من 5)</h2>
+      <div class="w-full bg-gray-200 h-2 mb-6 rounded">
+        <div class="bg-primary h-2 rounded transition-all duration-300" [style.width.%]="(currentStep() / 5) * 100"></div>
+      </div>
+
+      <form [formGroup]="wizardForm">
+        @if (currentStep() === 1) {
+          <div formGroupName="businessInfo" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">اسم النشاط التجاري</label>
+              <input type="text" formControlName="businessName" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="font-medium">وصف النشاط</label>
+              <textarea formControlName="description" rows="3" class="border p-2 w-full rounded focus:outline-none focus:border-primary"></textarea>
+            </div>
+          </div>
+        }
+
+        @if (currentStep() === 2) {
+          <div formGroupName="categories" class="flex flex-col gap-3">
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" formControlName="beauty"> جمال وعناية</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" formControlName="food"> الأطعمة والمأكولات</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" formControlName="crafts"> الأشغال اليدوية</label>
+            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" formControlName="fashion"> الأزياء والموضة</label>
+          </div>
+        }
+
+        @if (currentStep() === 3) {
+          <div formGroupName="social" class="flex flex-col gap-4">
+            <input type="text" formControlName="instagram" placeholder="رابط انستجرام" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+            <input type="text" formControlName="facebook" placeholder="رابط فيسبوك" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+            <input type="text" formControlName="tiktok" placeholder="رابط تيك توك" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+            <input type="text" formControlName="snapchat" placeholder="رابط سناب شات" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+          </div>
+        }
+
+        @if (currentStep() === 4) {
+          <div formGroupName="contact" class="flex flex-col gap-4">
+            <input type="text" formControlName="phone" placeholder="رقم الهاتف" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+            <input type="email" formControlName="email" placeholder="البريد الإلكتروني" class="border p-2 w-full rounded focus:outline-none focus:border-primary">
+          </div>
+        }
+
+        @if (currentStep() === 5) {
+          <div formGroupName="terms" class="flex items-center gap-2">
+            <input type="checkbox" formControlName="agreed" class="w-4 h-4 text-primary">
+            <label class="font-medium">أوافق على الشروط والأحكام الخاصة بالتجار</label>
+          </div>
+        }
+      </form>
+
+      <div class="flex justify-between mt-8">
+        <button [disabled]="currentStep() === 1" (click)="prevStep()" class="px-4 py-2 border border-gray-300 rounded disabled:opacity-50 hover:bg-gray-50 transition-colors">السابق</button>
+        <button (click)="nextStep()" class="px-6 py-2 bg-primary text-white rounded hover:bg-dark transition-colors">
+          {{ currentStep() === 5 ? 'تقديم الطلب' : 'التالي' }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

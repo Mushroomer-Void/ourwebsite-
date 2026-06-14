@@ -1,0 +1,34 @@
+<div class="flex flex-col gap-4 p-4 max-w-md mx-auto mt-10 border rounded shadow-sm bg-white">
+  <h2 class="text-2xl font-bold mb-4">تسجيل الدخول</h2>
+  
+  @if (error) {
+    <div class="text-red-500 mb-2 font-medium">{{ error }}</div>
+  }
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">البريد الإلكتروني</label>
+      <input type="email" formControlName="email" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+        <span class="error-message">هذا الحقل مطلوب والبريد الإلكتروني يجب أن يكون صحيحاً</span>
+      }
+    </div>
+    
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">كلمة المرور</label>
+      <input type="password" formControlName="password" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+        <span class="error-message">كلمة المرور مطلوبة (6 أحرف على الأقل)</span>
+      }
+    </div>
+    
+    <button type="submit" [disabled]="loginForm.invalid" class="bg-primary text-white p-2 rounded disabled:opacity-50 mt-2">
+      دخول
+    </button>
+  </form>
+
+  <div class="flex justify-between mt-4 text-sm">
+    <a routerLink="/auth/register" class="text-primary hover:underline">إنشاء حساب جديد</a>
+    <a routerLink="/auth/merchant-apply" class="text-accent hover:underline">انضم كتاجر</a>
+  </div>
+</div>

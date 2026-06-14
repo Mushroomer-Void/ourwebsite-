@@ -1,0 +1,301 @@
+<div class="space-y-6">
+  <!-- Header & Stats -->
+  <div class="bg-white dark:bg-darkest rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">البلاغات</h1>
+      
+      <!-- Quick Stats -->
+      <div class="flex flex-wrap gap-3">
+        <div class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2">
+          <i class="fas fa-list-ul text-gray-400"></i>
+          <span class="text-sm text-gray-600 dark:text-gray-300">الإجمالي:</span>
+          <span class="font-bold text-gray-900 dark:text-white">{{ totalReports() }}</span>
+        </div>
+        <div class="px-4 py-2 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-800 flex items-center gap-2">
+          <i class="fas fa-exclamation-circle text-red-400"></i>
+          <span class="text-sm text-red-700 dark:text-red-300">معلقة:</span>
+          <span class="font-bold text-red-900 dark:text-red-100">{{ pendingReports() }}</span>
+        </div>
+        <div class="px-4 py-2 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-100 dark:border-green-800 flex items-center gap-2">
+          <i class="fas fa-check-circle text-green-400"></i>
+          <span class="text-sm text-green-700 dark:text-green-300">تم الحل:</span>
+          <span class="font-bold text-green-900 dark:text-green-100">{{ resolvedReports() }}</span>
+        </div>
+        <div class="px-4 py-2 bg-gray-100 dark:bg-gray-800/80 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-2">
+          <i class="fas fa-times-circle text-gray-400"></i>
+          <span class="text-sm text-gray-700 dark:text-gray-400">مرفوضة:</span>
+          <span class="font-bold text-gray-900 dark:text-gray-300">{{ dismissedReports() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters & Tabs -->
+    <div class="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
+      
+      <!-- Type Filter Buttons -->
+      <div class="flex gap-2 flex-wrap">
+        <button (click)="filterType.set('all')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors border"
+                [class.bg-gray-900]="filterType() === 'all'"
+                [class.dark:bg-white]="filterType() === 'all'"
+                [class.text-white]="filterType() === 'all'"
+                [class.dark:text-gray-900]="filterType() === 'all'"
+                [class.border-transparent]="filterType() === 'all'"
+                [class.bg-white]="filterType() !== 'all'"
+                [class.dark:bg-darkest]="filterType() !== 'all'"
+                [class.text-gray-600]="filterType() !== 'all'"
+                [class.dark:text-gray-300]="filterType() !== 'all'"
+                [class.border-gray-200]="filterType() !== 'all'"
+                [class.dark:border-gray-700]="filterType() !== 'all'">
+          الكل
+        </button>
+        <button (click)="filterType.set('product')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors border flex items-center gap-2"
+                [class.bg-blue-50]="filterType() === 'product'"
+                [class.dark:bg-blue-900/20]="filterType() === 'product'"
+                [class.text-blue-700]="filterType() === 'product'"
+                [class.dark:text-blue-300]="filterType() === 'product'"
+                [class.border-blue-200]="filterType() === 'product'"
+                [class.dark:border-blue-800]="filterType() === 'product'"
+                [class.bg-white]="filterType() !== 'product'"
+                [class.dark:bg-darkest]="filterType() !== 'product'"
+                [class.text-gray-600]="filterType() !== 'product'"
+                [class.dark:text-gray-300]="filterType() !== 'product'"
+                [class.border-gray-200]="filterType() !== 'product'"
+                [class.dark:border-gray-700]="filterType() !== 'product'">
+          <i class="fas fa-box"></i> منتج
+        </button>
+        <button (click)="filterType.set('shop')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors border flex items-center gap-2"
+                [class.bg-purple-50]="filterType() === 'shop'"
+                [class.dark:bg-purple-900/20]="filterType() === 'shop'"
+                [class.text-purple-700]="filterType() === 'shop'"
+                [class.dark:text-purple-300]="filterType() === 'shop'"
+                [class.border-purple-200]="filterType() === 'shop'"
+                [class.dark:border-purple-800]="filterType() === 'shop'"
+                [class.bg-white]="filterType() !== 'shop'"
+                [class.dark:bg-darkest]="filterType() !== 'shop'"
+                [class.text-gray-600]="filterType() !== 'shop'"
+                [class.dark:text-gray-300]="filterType() !== 'shop'"
+                [class.border-gray-200]="filterType() !== 'shop'"
+                [class.dark:border-gray-700]="filterType() !== 'shop'">
+          <i class="fas fa-store"></i> متجر
+        </button>
+        <button (click)="filterType.set('user')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors border flex items-center gap-2"
+                [class.bg-orange-50]="filterType() === 'user'"
+                [class.dark:bg-orange-900/20]="filterType() === 'user'"
+                [class.text-orange-700]="filterType() === 'user'"
+                [class.dark:text-orange-300]="filterType() === 'user'"
+                [class.border-orange-200]="filterType() === 'user'"
+                [class.dark:border-orange-800]="filterType() === 'user'"
+                [class.bg-white]="filterType() !== 'user'"
+                [class.dark:bg-darkest]="filterType() !== 'user'"
+                [class.text-gray-600]="filterType() !== 'user'"
+                [class.dark:text-gray-300]="filterType() !== 'user'"
+                [class.border-gray-200]="filterType() !== 'user'"
+                [class.dark:border-gray-700]="filterType() !== 'user'">
+          <i class="fas fa-user"></i> مستخدم
+        </button>
+      </div>
+
+      <!-- Status Tabs -->
+      <div class="flex gap-2 overflow-x-auto w-full lg:w-auto">
+        <button (click)="activeTab.set('pending')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                [class.bg-primary]="activeTab() === 'pending'"
+                [class.text-white]="activeTab() === 'pending'"
+                [class.bg-gray-100]="activeTab() !== 'pending'"
+                [class.text-gray-600]="activeTab() !== 'pending'"
+                [class.dark:bg-gray-800]="activeTab() !== 'pending'"
+                [class.dark:text-gray-300]="activeTab() !== 'pending'">
+          معلقة
+        </button>
+        <button (click)="activeTab.set('resolved')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                [class.bg-green-600]="activeTab() === 'resolved'"
+                [class.text-white]="activeTab() === 'resolved'"
+                [class.bg-gray-100]="activeTab() !== 'resolved'"
+                [class.text-gray-600]="activeTab() !== 'resolved'"
+                [class.dark:bg-gray-800]="activeTab() !== 'resolved'"
+                [class.dark:text-gray-300]="activeTab() !== 'resolved'">
+          تم الحل
+        </button>
+        <button (click)="activeTab.set('dismissed')"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                [class.bg-gray-600]="activeTab() === 'dismissed'"
+                [class.text-white]="activeTab() === 'dismissed'"
+                [class.bg-gray-100]="activeTab() !== 'dismissed'"
+                [class.text-gray-600]="activeTab() !== 'dismissed'"
+                [class.dark:bg-gray-800]="activeTab() !== 'dismissed'"
+                [class.dark:text-gray-300]="activeTab() !== 'dismissed'">
+          مرفوضة
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- List View -->
+  @if (filteredReports().length > 0) {
+    <div class="space-y-4">
+      @for (report of filteredReports(); track report.id) {
+        <div class="bg-white dark:bg-darkest rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-5 hover:shadow-md hover:border-primary/30 transition-all flex flex-col md:flex-row gap-4 items-start md:items-center">
+          
+          <!-- Icon -->
+          <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-xl"
+               [class.bg-blue-100]="report.targetType === 'product'"
+               [class.text-blue-600]="report.targetType === 'product'"
+               [class.bg-purple-100]="report.targetType === 'shop'"
+               [class.text-purple-600]="report.targetType === 'shop'"
+               [class.bg-orange-100]="report.targetType === 'user'"
+               [class.text-orange-600]="report.targetType === 'user'">
+            @switch (report.targetType) {
+              @case ('product') { <i class="fas fa-box"></i> }
+              @case ('shop') { <i class="fas fa-store"></i> }
+              @case ('user') { <i class="fas fa-user"></i> }
+            }
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <span class="text-sm font-bold text-gray-900 dark:text-white">أبلغ عن: {{ report.targetName }}</span>
+              @switch (report.status) {
+                @case ('pending') { <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-bold rounded shadow-sm border border-yellow-200">معلق</span> }
+                @case ('resolved') { <span class="px-2 py-0.5 bg-green-100 text-green-800 text-xs font-bold rounded shadow-sm border border-green-200">تم الحل</span> }
+                @case ('dismissed') { <span class="px-2 py-0.5 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-bold rounded shadow-sm border border-gray-300 dark:border-gray-600">مرفوض</span> }
+              }
+            </div>
+            
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-1 border-r-2 border-gray-300 dark:border-gray-700 pe-2 me-2 inline-block">
+              {{ report.reason }}
+            </p>
+
+            <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+              <span class="flex items-center gap-1">
+                <i class="fas fa-user"></i> المُبلّغ: {{ report.reporterName }}
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fas fa-calendar"></i> {{ report.createdAt }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Action -->
+          <div class="w-full md:w-auto mt-4 md:mt-0 shrink-0">
+            <button (click)="openDetail(report)" class="w-full md:w-auto px-5 py-2 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm">
+              عرض التفاصيل
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="bg-white dark:bg-darkest rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-16 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+      <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-5xl mb-6">
+        <i class="fas fa-flag"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">لا توجد بلاغات</h3>
+      <p>لم يتم العثور على أي بلاغات في هذا التصنيف.</p>
+    </div>
+  }
+</div>
+
+<!-- Report Detail Modal -->
+@if (showDetailModal() && selectedReport()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div class="bg-white dark:bg-darkest w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">تفاصيل البلاغ</h2>
+        <button (click)="closeDetail()" class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto flex-1 space-y-6">
+        
+        <!-- Status & Meta -->
+        <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
+          <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+            <i class="fas fa-calendar"></i>
+            <span>{{ selectedReport()?.createdAt }}</span>
+            <span class="px-2">|</span>
+            <span>رقم البلاغ: #{{ selectedReport()?.id }}</span>
+          </div>
+          @switch (selectedReport()?.status) {
+            @case ('pending') { <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded shadow-sm border border-yellow-200">معلق</span> }
+            @case ('resolved') { <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded shadow-sm border border-green-200">تم الحل</span> }
+            @case ('dismissed') { <span class="px-3 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs font-bold rounded shadow-sm border border-gray-300 dark:border-gray-600">مرفوض</span> }
+          }
+        </div>
+
+        <!-- Target Info -->
+        <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl bg-white dark:bg-darkest shadow-sm"
+               [class.text-blue-600]="selectedReport()?.targetType === 'product'"
+               [class.text-purple-600]="selectedReport()?.targetType === 'shop'"
+               [class.text-orange-600]="selectedReport()?.targetType === 'user'">
+            @switch (selectedReport()?.targetType) {
+              @case ('product') { <i class="fas fa-box"></i> }
+              @case ('shop') { <i class="fas fa-store"></i> }
+              @case ('user') { <i class="fas fa-user"></i> }
+            }
+          </div>
+          <div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              الهدف المُبلغ عنه 
+              (@switch (selectedReport()?.targetType) {
+                @case ('product') { منتج }
+                @case ('shop') { متجر }
+                @case ('user') { مستخدم }
+              })
+            </p>
+            <p class="font-bold text-gray-900 dark:text-white">{{ selectedReport()?.targetName }}</p>
+          </div>
+        </div>
+
+        <!-- Reporter Info -->
+        <div>
+          <h4 class="font-bold text-sm text-gray-900 dark:text-white uppercase tracking-wider mb-2">مُقدم البلاغ</h4>
+          <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-darkest p-3 rounded-lg border border-gray-100 dark:border-gray-800">
+            <i class="fas fa-user text-gray-400 w-5 text-center"></i>
+            <span class="font-medium">{{ selectedReport()?.reporterName }}</span>
+          </div>
+        </div>
+
+        <!-- Reason -->
+        <div>
+          <h4 class="font-bold text-sm text-gray-900 dark:text-white uppercase tracking-wider mb-2">السبب / الوصف</h4>
+          <div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/50 rounded-xl p-4 text-gray-800 dark:text-gray-200 leading-relaxed text-sm">
+            {{ selectedReport()?.reason }}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 rounded-b-2xl flex gap-3">
+        @if (selectedReport()?.status === 'pending') {
+          <button (click)="closeDetail()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-darkest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm">
+            إغلاق
+          </button>
+          <button (click)="dismiss()" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-darkest hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2">
+            <i class="fas fa-times-circle"></i> رفض البلاغ
+          </button>
+          <button (click)="resolve()" class="flex-1 px-4 py-2 rounded-lg text-sm font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm flex items-center justify-center gap-2">
+            <i class="fas fa-check-circle"></i> تم الحل
+          </button>
+        } @else {
+          <button (click)="closeDetail()" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 bg-white dark:bg-darkest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-sm">
+            إغلاق النافذة
+          </button>
+        }
+      </div>
+
+    </div>
+  </div>
+}

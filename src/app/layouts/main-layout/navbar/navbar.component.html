@@ -1,0 +1,65 @@
+<nav class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-darkest/80 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-colors duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" routerLink="/">
+        <i class="fas fa-store text-2xl text-primary dark:text-soft"></i>
+        <span class="font-bold text-xl text-darkest dark:text-light">سوق ليبيا</span>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-8 space-x-reverse">
+        <a routerLink="/" routerLinkActive="text-primary dark:text-soft font-bold" [routerLinkActiveOptions]="{exact: true}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
+          <i class="fas fa-home me-1"></i> الرئيسية
+        </a>
+        <a routerLink="/products" routerLinkActive="text-primary dark:text-soft font-bold" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
+          <i class="fas fa-box-open me-1"></i> المنتجات
+        </a>
+        <a routerLink="/stores" routerLinkActive="text-primary dark:text-soft font-bold" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
+          <i class="fas fa-store-alt me-1"></i> المتاجر
+        </a>
+      </div>
+
+      <!-- Actions: Theme Toggle + Login/User + Mobile Menu Button -->
+      <div class="flex items-center gap-4">
+        <button (click)="themeService.toggle()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors" aria-label="Toggle Theme">
+          @if (themeService.currentTheme() === 'light') {
+            <i class="fas fa-moon"></i>
+          } @else {
+            <i class="fas fa-sun"></i>
+          }
+        </button>
+        
+        <button (click)="goToLogin()" class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-dark transition-colors">
+          دخول
+        </button>
+
+        <!-- Mobile menu button -->
+        <button (click)="toggleMobileMenu()" class="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <i class="fas" [class.fa-bars]="!isMobileMenuOpen()" [class.fa-times]="isMobileMenuOpen()"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  @if (isMobileMenuOpen()) {
+    <div class="md:hidden bg-white dark:bg-darkest border-t border-gray-200 dark:border-gray-800">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a routerLink="/" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" [routerLinkActiveOptions]="{exact: true}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
+          <i class="fas fa-home me-2"></i> الرئيسية
+        </a>
+        <a routerLink="/products" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
+          <i class="fas fa-box-open me-2"></i> المنتجات
+        </a>
+        <a routerLink="/stores" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
+          <i class="fas fa-store-alt me-2"></i> المتاجر
+        </a>
+        <button (click)="goToLogin()" class="w-full text-right block px-3 py-2 rounded-md text-base font-medium text-white bg-primary">
+          <i class="fas fa-sign-in-alt me-2"></i> تسجيل الدخول
+        </button>
+      </div>
+    </div>
+  }
+</nav>

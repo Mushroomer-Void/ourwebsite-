@@ -1,0 +1,58 @@
+<div class="flex h-screen bg-gray-50 overflow-hidden text-right" dir="rtl">
+  <!-- Sidebar -->
+  <aside 
+    class="bg-darkest text-white transition-all duration-300 flex flex-col"
+    [class.w-64]="sidebarOpen()" 
+    [class.w-0]="!sidebarOpen()"
+    [class.overflow-hidden]="!sidebarOpen()"
+  >
+    <div class="p-4 flex items-center justify-center border-b border-gray-700 min-h-[64px]">
+      <h1 class="text-xl font-bold whitespace-nowrap">السوق الليبي</h1>
+    </div>
+
+    <nav class="flex-1 p-4 flex flex-col gap-2 overflow-y-auto whitespace-nowrap">
+      
+      @if (isMerchant()) {
+        <a routerLink="/merchant" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary" [routerLinkActiveOptions]="{exact: true}">الرئيسية</a>
+        <a routerLink="/merchant/products" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">منتجاتي</a>
+        <a routerLink="/merchant/orders" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">الطلبات</a>
+        <a routerLink="/merchant/store-settings" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">بيانات المتجر</a>
+      }
+
+      @if (isAdmin()) {
+        <a routerLink="/admin" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary" [routerLinkActiveOptions]="{exact: true}">الرئيسية</a>
+        <a routerLink="/admin/applications" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">طلبات التجار</a>
+        <a routerLink="/admin/users" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">المستخدمون</a>
+        <a routerLink="/admin/reports" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">البلاغات</a>
+        <a routerLink="/admin/categories" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">التصنيفات</a>
+        <a routerLink="/admin/seasons" class="block p-2 rounded hover:bg-gray-800 transition-colors" routerLinkActive="bg-primary">المواسم</a>
+      }
+
+      <div class="mt-auto pt-4 border-t border-gray-700">
+        <button (click)="logout()" class="w-full text-right p-2 rounded hover:bg-red-900 transition-colors text-red-300">
+          تسجيل الخروج
+        </button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <!-- Header -->
+    <header class="bg-white border-b shadow-sm p-4 flex items-center justify-between min-h-[64px]">
+      <div class="flex items-center gap-4">
+        <button (click)="toggleSidebar()" class="p-2 bg-gray-100 rounded hover:bg-gray-200 text-gray-700">
+          ☰
+        </button>
+        <span class="font-bold text-gray-800">
+          مرحباً بك، {{ authService.currentUser()?.name || 'مستخدم' }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="flex-1 overflow-auto p-6">
+      <router-outlet />
+    </div>
+  </main>
+</div>

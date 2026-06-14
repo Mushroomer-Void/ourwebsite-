@@ -1,0 +1,136 @@
+<div class="flex flex-col gap-6 relative">
+  <!-- Header -->
+  <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <h2 class="text-2xl font-bold mb-1">بيانات المتجر</h2>
+      <p class="text-gray-600 font-medium">قم بتحديث بيانات متجرك ومعلومات التواصل</p>
+    </div>
+    
+    <!-- Shop Status Action -->
+    <div class="flex items-center gap-3">
+      @if (isOpen()) {
+        <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+          مفتوح <i class="fas fa-check-circle mr-1"></i>
+        </span>
+        <button (click)="toggleShop()" class="border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg font-bold transition-colors text-sm shadow-sm">
+          إغلاق مؤقت <i class="fas fa-lock mr-1"></i>
+        </button>
+      } @else {
+        <div class="flex flex-col items-end gap-1">
+          <span class="bg-red-100 text-red-800 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">
+            مغلق <i class="fas fa-times-circle mr-1"></i>
+          </span>
+          <span class="text-xs text-gray-500 font-medium">السبب: {{ shopInfo().closeReason }} | حتى: {{ shopInfo().closedUntil }}</span>
+        </div>
+        <button (click)="toggleShop()" class="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm shadow-sm">
+          فتح المتجر <i class="fas fa-door-open mr-1"></i>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Info Form -->
+    <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+      <h3 class="text-xl font-bold mb-6 border-b border-gray-100 pb-3">المعلومات الأساسية</h3>
+      
+      <div class="flex flex-col gap-5">
+        <div>
+          <label class="block text-sm font-bold mb-2 text-gray-700">اسم المتجر <span class="text-red-500">*</span></label>
+          <input type="text" [ngModel]="formData().businessName" (ngModelChange)="updateField('businessName', $event)" class="w-full border border-gray-300 rounded-lg p-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-bold mb-2 text-gray-700">وصف المتجر</label>
+          <textarea [ngModel]="formData().description" (ngModelChange)="updateField('description', $event)" class="w-full border border-gray-300 rounded-lg p-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all h-28 resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-bold mb-2 text-gray-700">رقم الهاتف</label>
+            <input type="text" [ngModel]="formData().phone" (ngModelChange)="updateField('phone', $event)" class="w-full border border-gray-300 rounded-lg p-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2 text-gray-700">البريد الإلكتروني</label>
+            <input type="email" [ngModel]="formData().email" (ngModelChange)="updateField('email', $event)" class="w-full border border-gray-300 rounded-lg p-3 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Links Form -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 flex flex-col">
+      <h3 class="text-xl font-bold mb-6 border-b border-gray-100 pb-3">وسائل التواصل</h3>
+      
+      <div class="flex flex-col gap-4 flex-1">
+        <div>
+          <label class="block text-sm font-bold mb-1.5 text-gray-700"><i class="fab fa-whatsapp text-green-500 w-5 text-center"></i> واتساب</label>
+          <input type="text" [ngModel]="formData().socialLinks.whatsapp" (ngModelChange)="updateSocialLink('whatsapp', $event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1.5 text-gray-700"><i class="fab fa-instagram text-pink-500 w-5 text-center"></i> انستقرام</label>
+          <input type="text" [ngModel]="formData().socialLinks.instagram" (ngModelChange)="updateSocialLink('instagram', $event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1.5 text-gray-700"><i class="fab fa-facebook text-blue-600 w-5 text-center"></i> فيسبوك</label>
+          <input type="text" [ngModel]="formData().socialLinks.facebook" (ngModelChange)="updateSocialLink('facebook', $event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1.5 text-gray-700"><i class="fab fa-tiktok text-black w-5 text-center"></i> تيك توك</label>
+          <input type="text" [ngModel]="formData().socialLinks.tiktok" (ngModelChange)="updateSocialLink('tiktok', $event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+        </div>
+        <div>
+          <label class="block text-sm font-bold mb-1.5 text-gray-700"><i class="fab fa-snapchat-ghost text-yellow-500 w-5 text-center"></i> سناب شات</label>
+          <input type="text" [ngModel]="formData().socialLinks.snapchat" (ngModelChange)="updateSocialLink('snapchat', $event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+        </div>
+      </div>
+
+      @if (socialError()) {
+        <div class="mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm font-bold border border-red-100 flex items-center gap-2">
+          <i class="fas fa-exclamation-circle"></i> يجب إدخال وسيلة تواصل واحدة على الأقل
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Save Button -->
+  <div class="flex items-center gap-4 mt-2">
+    <button (click)="saveSettings()" [disabled]="!formData().businessName.trim()" class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary-dark transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2">
+      حفظ التغييرات <i class="fas fa-save"></i>
+    </button>
+    
+    @if (saved()) {
+      <span class="text-green-600 font-bold bg-green-50 px-4 py-2 rounded-lg border border-green-100 flex items-center gap-2">
+        <i class="fas fa-check-circle"></i> تم حفظ التغييرات بنجاح
+      </span>
+    }
+  </div>
+
+  <!-- Close Shop Modal -->
+  @if (showCloseModal()) {
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+        <h3 class="text-xl font-bold mb-4 border-b border-gray-100 pb-3 text-red-600">
+          <i class="fas fa-lock mr-2"></i> إغلاق المتجر مؤقتاً
+        </h3>
+        <p class="text-gray-600 text-sm mb-5 font-medium">لن يتمكن الزوار من طلب منتجاتك أثناء إغلاق المتجر، لكن يمكنك الاستمرار في إدارة الطلبات الحالية.</p>
+        
+        <div class="flex flex-col gap-4">
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">سبب الإغلاق <span class="text-red-500">*</span></label>
+            <input type="text" [ngModel]="closeReason()" (ngModelChange)="closeReason.set($event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="مثال: جرد المخزون، إجازة...">
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-1.5 text-gray-700">موعد الفتح المتوقع <span class="text-red-500">*</span></label>
+            <input type="date" [ngModel]="closedUntil()" (ngModelChange)="closedUntil.set($event)" class="w-full border border-gray-300 rounded-lg p-2.5 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-left" dir="ltr">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
+          <button (click)="cancelClose()" class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold transition-colors">إلغاء</button>
+          <button (click)="confirmClose()" [disabled]="!closeReason().trim() || !closedUntil().trim()" class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold transition-colors shadow-sm disabled:opacity-50">تأكيد الإغلاق</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

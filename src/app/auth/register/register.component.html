@@ -1,0 +1,49 @@
+<div class="flex flex-col gap-4 p-4 max-w-md mx-auto mt-10 border rounded shadow-sm bg-white">
+  <h2 class="text-2xl font-bold mb-4">تسجيل حساب جديد</h2>
+  
+  @if (error) {
+    <div class="text-red-500 mb-2 font-medium">{{ error }}</div>
+  }
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">الاسم الكامل</label>
+      <input type="text" formControlName="name" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+        <span class="error-message">هذا الحقل مطلوب (3 أحرف على الأقل)</span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">البريد الإلكتروني</label>
+      <input type="email" formControlName="email" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+        <span class="error-message">البريد الإلكتروني غير صحيح</span>
+      }
+    </div>
+    
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">كلمة المرور</label>
+      <input type="password" formControlName="password" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+        <span class="error-message">كلمة المرور مطلوبة (6 أحرف على الأقل)</span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="font-medium text-gray-700">تأكيد كلمة المرور</label>
+      <input type="password" formControlName="confirmPassword" class="border p-2 rounded focus:outline-none focus:border-primary">
+      @if (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid) {
+        <span class="error-message">تأكيد كلمة المرور مطلوب</span>
+      }
+    </div>
+    
+    <button type="submit" [disabled]="registerForm.invalid" class="bg-primary text-white p-2 rounded disabled:opacity-50 mt-2">
+      تسجيل
+    </button>
+  </form>
+
+  <div class="mt-4 text-sm">
+    <a routerLink="/auth/login" class="text-primary hover:underline">لدي حساب بالفعل؟ دخول</a>
+  </div>
+</div>

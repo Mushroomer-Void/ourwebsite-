@@ -2,3 +2,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import 'styles/variables';
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  @apply bg-white text-darkest transition-colors duration-300;
+}
+
+body.dark {
+  @apply bg-darkest text-light;
+}
+
+input.ng-touched.ng-invalid {
+  border-color: red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: small;
+}
