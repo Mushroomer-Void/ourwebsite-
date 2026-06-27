@@ -1,8 +1,9 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HomeProduct } from '@core/api/mock/product.mock.service';
 import { AuthMockService } from '@core/api/mock/auth.mock.service';
+import { CartMockService } from '@core/api/mock/cart.mock.service';
 
 @Component({
   selector: 'app-product-card',
@@ -14,11 +15,26 @@ import { AuthMockService } from '@core/api/mock/auth.mock.service';
 export class ProductCardComponent {
   private router = inject(Router);
   private authService = inject(AuthMockService);
+  cartService = inject(CartMockService);
 
   product = input.required<HomeProduct>();
   wishlistToggle = output<number>();
   productClick = output<number>();
   loginRequired = output<void>();
+
+  isInCart = computed(() => {
+    const id = this.product()?.id;
+    return id ? this.cartService.isInCart(id) : false;
+  });
+
+  addToCart(event: Event): void {
+    event.stopPropagation();
+    if (!this.authService.isLoggedIn()) {
+      this.loginRequired.emit();
+      return;
+    }
+    this.cartService.addToCart(this.product());
+  }
 
   onWishlistClick(event: Event): void {
     event.stopPropagation();

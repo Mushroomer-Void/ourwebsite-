@@ -80,5 +80,15 @@
       </span>
     </div>
 
+    <!-- زر إضافة للسلة -->
+    <button class="add-to-cart-btn"
+            (click)="addToCart($event)"
+            [class.in-cart]="isInCart()">
+      @if (isInCart()) {
+        <i class="fas fa-check"></i> في السلة
+      } @else {
+        <i class="fas fa-cart-plus"></i> أضف للسلة
+      }
+    </button>
   </div>
 </div>

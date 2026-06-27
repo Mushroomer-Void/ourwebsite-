@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';
 import { AuthMockService } from '@core/api/mock/auth.mock.service';
 import { ProductMockService } from '@core/api/mock/product.mock.service';
+import { CartMockService } from '@core/api/mock/cart.mock.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,13 +15,15 @@ import { ProductMockService } from '@core/api/mock/product.mock.service';
 })
 export class NavbarComponent {
   themeService = inject(ThemeService);
-  private router = inject(Router);
+  router = inject(Router);
   public authService = inject(AuthMockService);
   public productService = inject(ProductMockService);
+  cartService = inject(CartMockService);
 
   isLoggedIn = this.authService.isLoggedIn;
   currentUser = this.authService.currentUser;
   role = this.authService.role;
+  cartCount = this.cartService.totalItems;
   isMobileMenuOpen = signal(false);
   showUserMenu = signal(false);
   showNotifications = signal(false);

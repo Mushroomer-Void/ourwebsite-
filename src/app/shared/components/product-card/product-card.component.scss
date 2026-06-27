@@ -150,4 +150,25 @@
 .stats {
   font-size: 12px;
   color: #6b7280;
+  margin-bottom: 12px;
 }
+
+.add-to-cart-btn {
+  width: 100%;
+  background: #522B5B;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.add-to-cart-btn:hover { background: #2B124C; }
+.add-to-cart-btn.in-cart { background: #22c55e; }

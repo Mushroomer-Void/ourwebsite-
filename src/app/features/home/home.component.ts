@@ -75,6 +75,6 @@ export class HomeComponent implements OnInit {
   }
 
   goToShop(shopId: number) {
-    console.log('shop', shopId);
+    this.router.navigate(['/stores', shopId]);
   }
 }

@@ -115,6 +115,14 @@
         }
       </div>
 
+      <!-- زر السلة -->
+      <button class="icon-btn" (click)="router.navigate(['/cart'])">
+        <i class="fas fa-shopping-cart"></i>
+        @if (cartCount() > 0) {
+          <span class="badge">{{ cartCount() }}</span>
+        }
+      </button>
+
       <!-- قائمة المستخدم -->
       <div class="user-wrapper">
         <button class="user-btn" (click)="toggleUserMenu()">
