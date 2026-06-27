@@ -12,6 +12,22 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent)
+      },
+      {
+        path: 'products/:id',
+        loadComponent: () => import('./features/products/product-details/product-details.component')
+          .then(c => c.ProductDetailsComponent)
+      },
+      {
+        path: 'profile',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/profile/profile.component')
+          .then(c => c.ProfileComponent)
+      },
+      {
+        path: 'products',
+        loadComponent: () => import('./features/products/products-list/products-list.component')
+          .then(c => c.ProductsListComponent)
       }
     ]
   },

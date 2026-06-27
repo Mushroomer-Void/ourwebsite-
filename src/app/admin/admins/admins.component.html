@@ -1,1 +1,110 @@
-<p>الأدمنز</p>
+<div class="admins-page">
+  <div class="page-header">
+    <h1><i class="fas fa-shield-alt"></i> مدراء النظام</h1>
+    <button (click)="showAddModal.set(true)">
+      <i class="fas fa-plus"></i> إضافة مدير
+    </button>
+  </div>
+
+  <div class="admins-grid">
+    @for (admin of admins(); track admin.id) {
+      <div class="admin-card">
+        <div class="admin-header">
+          <i class="fas fa-user-shield text-3xl"></i>
+          <div>
+            <h3>{{ admin.name }}</h3>
+            <p>{{ admin.email }}</p>
+            @if (admin.isSuperAdmin) {
+              <span class="super-badge">
+                <i class="fas fa-crown"></i> مدير رئيسي
+              </span>
+            }
+          </div>
+        </div>
+        <div class="permissions">
+          <h4><i class="fas fa-key"></i> الصلاحيات</h4>
+          @if (admin.permissions.manageApplications) {
+            <span><i class="fas fa-check"></i> إدارة طلبات التجار</span>
+          }
+          @if (admin.permissions.manageUsers) {
+            <span><i class="fas fa-check"></i> إدارة المستخدمين</span>
+          }
+          @if (admin.permissions.manageReports) {
+            <span><i class="fas fa-check"></i> إدارة البلاغات</span>
+          }
+          @if (admin.permissions.manageCategories) {
+            <span><i class="fas fa-check"></i> إدارة التصنيفات</span>
+          }
+          @if (admin.permissions.manageSeasons) {
+            <span><i class="fas fa-check"></i> إدارة المواسم</span>
+          }
+          @if (admin.permissions.manageAdmins) {
+            <span><i class="fas fa-check"></i> إدارة المدراء</span>
+          }
+        </div>
+        <div class="admin-footer">
+          <i class="fas fa-calendar"></i>
+          انضم: {{ admin.joinDate | date:'yyyy/MM/dd' }}
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (showAddModal()) {
+    <div class="modal-backdrop" (click)="showAddModal.set(false)"></div>
+    <div class="modal">
+      <h2><i class="fas fa-user-plus"></i> إضافة مدير جديد</h2>
+      <div class="form-group">
+        <label>الاسم</label>
+        <input type="text" placeholder="اسم المدير"
+               (input)="updateField('name', $any($event.target).value)" />
+      </div>
+      <div class="form-group">
+        <label>الإيميل</label>
+        <input type="email" placeholder="email@example.com"
+               (input)="updateField('email', $any($event.target).value)" />
+      </div>
+      <h3>الصلاحيات</h3>
+      <div class="permissions-form">
+        <label>
+          <input type="checkbox" checked
+            (change)="updatePermission('manageApplications', $any($event.target).checked)" />
+          إدارة طلبات التجار
+        </label>
+        <label>
+          <input type="checkbox" checked
+            (change)="updatePermission('manageUsers', $any($event.target).checked)" />
+          إدارة المستخدمين
+        </label>
+        <label>
+          <input type="checkbox" checked
+            (change)="updatePermission('manageReports', $any($event.target).checked)" />
+          إدارة البلاغات
+        </label>
+        <label>
+          <input type="checkbox"
+            (change)="updatePermission('manageCategories', $any($event.target).checked)" />
+          إدارة التصنيفات
+        </label>
+        <label>
+          <input type="checkbox"
+            (change)="updatePermission('manageSeasons', $any($event.target).checked)" />
+          إدارة المواسم
+        </label>
+        <label>
+          <input type="checkbox"
+            (change)="updatePermission('manageAdmins', $any($event.target).checked)" />
+          إدارة المدراء
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="save-btn" (click)="saveAdmin()">
+          <i class="fas fa-check"></i> حفظ
+        </button>
+        <button class="cancel-btn" (click)="showAddModal.set(false)">
+          <i class="fas fa-times"></i> إلغاء
+        </button>
+      </div>
+    </div>
+  }
+</div>

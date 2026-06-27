@@ -25,13 +25,18 @@ export class AuthMockService {
 
   private loadFromStorage(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const stored = localStorage.getItem('user');
-      if (stored) {
-        try {
-          this.currentUser.set(JSON.parse(stored) as User);
-        } catch {
-          this.currentUser.set(null);
+      try {
+        const stored = localStorage.getItem('user');
+        if (stored) {
+          const user = JSON.parse(stored);
+          if (user && user.id && user.role) {
+            this.currentUser.set(user);
+          } else {
+            localStorage.removeItem('user');
+          }
         }
+      } catch {
+        localStorage.removeItem('user');
       }
     }
   }

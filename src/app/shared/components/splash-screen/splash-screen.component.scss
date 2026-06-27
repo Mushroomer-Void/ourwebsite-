@@ -1,0 +1,35 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: #522B5B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeOut 0.5s ease 2s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; pointer-events: none; }
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: white;
+  border-radius: 2px;
+  animation: loading 2s ease forwards;
+}
+
+@keyframes loading {
+  from { width: 0; }
+  to { width: 100%; }
+}

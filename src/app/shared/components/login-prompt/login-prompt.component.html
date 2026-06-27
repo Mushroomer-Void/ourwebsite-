@@ -1,0 +1,34 @@
+@if (isVisible()) {
+  <!-- Backdrop ضبابي -->
+  <div class="backdrop" (click)="close()"></div>
+
+  <!-- Modal -->
+  <div class="modal">
+    <button class="close-btn" (click)="close()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="modal-icon">
+      <i class="fas fa-lock"></i>
+    </div>
+
+    <h2>سجّل دخولك أولاً</h2>
+    <p>لاستعمال هذه الميزة تحتاج لحساب في السوق الليبي</p>
+
+    <div class="modal-buttons">
+      <button class="btn-primary" (click)="goToRegister()">
+        <i class="fas fa-user-plus"></i>
+        إنشاء حساب جديد
+      </button>
+      <button class="btn-outline" (click)="goToLogin()">
+        <i class="fas fa-sign-in-alt"></i>
+        تسجيل الدخول
+      </button>
+    </div>
+
+    <p class="hint">
+      <i class="fas fa-info-circle"></i>
+      التسجيل مجاني وسريع
+    </p>
+  </div>
+}

@@ -1,0 +1,84 @@
+<div class="product-card" (click)="onProductClick()">
+
+  <!-- badges -->
+  <div class="badges">
+    @if (product().isNew) {
+      <span class="badge-new">
+        <i class="fas fa-sparkles"></i> جديد
+      </span>
+    }
+    @if (product().isTrending) {
+      <span class="badge-trending">
+        <i class="fas fa-fire"></i> رائج
+      </span>
+    }
+  </div>
+
+  <!-- صورة المنتج أو placeholder -->
+  <div class="product-image">
+    @if (product().image) {
+      <img [src]="product().image" [alt]="product().name" />
+    } @else {
+      <div class="placeholder">
+        <i class="fas fa-image text-4xl"></i>
+      </div>
+    }
+
+    <!-- زر القلب -->
+    <button class="wishlist-btn"
+            (click)="onWishlistClick($event)"
+            [class.active]="product().inWishlist">
+      <i [class]="product().inWishlist ? 'fas fa-heart' : 'far fa-heart'"></i>
+    </button>
+  </div>
+
+  <!-- معلومات المنتج -->
+  <div class="product-info">
+
+    <!-- اسم المتجر -->
+    <div class="shop-name">
+      <i class="fas fa-store"></i>
+      {{ product().shopName }}
+    </div>
+
+    <!-- اسم المنتج -->
+    <h3 class="product-name">{{ product().name }}</h3>
+
+    <!-- التصنيف -->
+    <div class="category">
+      {{ getCategoryName(product().categoryId) }}
+    </div>
+
+    <!-- السعر -->
+    <div class="price-section">
+      @if (product().discountPrice) {
+        <span class="price-new">{{ product().discountPrice }} د.ل</span>
+        <span class="price-old">{{ product().price }} د.ل</span>
+        <span class="discount-badge">
+          {{ ((product().price - product().discountPrice!) / product().price * 100) | number:'1.0-0' }}%-
+        </span>
+      } @else {
+        <span class="price-new">{{ product().price }} د.ل</span>
+      }
+    </div>
+
+    <!-- التقييم -->
+    <div class="rating">
+      @for (star of getStars(); track star) {
+        <i class="fas fa-star"
+           [class.filled]="star <= product().rating">
+        </i>
+      }
+      <span>({{ product().rating }})</span>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="stats">
+      <span>
+        <i class="fas fa-shopping-bag"></i>
+        {{ product().ordersCount }} طلب
+      </span>
+    </div>
+
+  </div>
+</div>

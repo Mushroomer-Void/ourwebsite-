@@ -1,65 +1,226 @@
-<nav class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-darkest/80 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-colors duration-300">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
-      
-      <!-- Logo -->
-      <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" routerLink="/">
-        <i class="fas fa-store text-2xl text-primary dark:text-soft"></i>
-        <span class="font-bold text-xl text-darkest dark:text-light">سوق ليبيا</span>
-      </div>
+<nav class="navbar">
+<div class="navbar-container">
 
-      <!-- Desktop Menu -->
-      <div class="hidden md:flex items-center space-x-8 space-x-reverse">
-        <a routerLink="/" routerLinkActive="text-primary dark:text-soft font-bold" [routerLinkActiveOptions]="{exact: true}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
-          <i class="fas fa-home me-1"></i> الرئيسية
-        </a>
-        <a routerLink="/products" routerLinkActive="text-primary dark:text-soft font-bold" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
-          <i class="fas fa-box-open me-1"></i> المنتجات
-        </a>
-        <a routerLink="/stores" routerLinkActive="text-primary dark:text-soft font-bold" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-soft transition-colors">
-          <i class="fas fa-store-alt me-1"></i> المتاجر
-        </a>
-      </div>
-
-      <!-- Actions: Theme Toggle + Login/User + Mobile Menu Button -->
-      <div class="flex items-center gap-4">
-        <button (click)="themeService.toggle()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors" aria-label="Toggle Theme">
-          @if (themeService.currentTheme() === 'light') {
-            <i class="fas fa-moon"></i>
-          } @else {
-            <i class="fas fa-sun"></i>
-          }
-        </button>
-        
-        <button (click)="goToLogin()" class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-dark transition-colors">
-          دخول
-        </button>
-
-        <!-- Mobile menu button -->
-        <button (click)="toggleMobileMenu()" class="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-          <i class="fas" [class.fa-bars]="!isMobileMenuOpen()" [class.fa-times]="isMobileMenuOpen()"></i>
-        </button>
-      </div>
-    </div>
+  <!-- ===== الجانب الأيمن: اللوغو ===== -->
+  <div class="navbar-logo" routerLink="/">
+    <i class="fas fa-store"></i>
+    <span>السوق الليبي</span>
   </div>
 
-  <!-- Mobile Menu -->
-  @if (isMobileMenuOpen()) {
-    <div class="md:hidden bg-white dark:bg-darkest border-t border-gray-200 dark:border-gray-800">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a routerLink="/" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" [routerLinkActiveOptions]="{exact: true}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
-          <i class="fas fa-home me-2"></i> الرئيسية
-        </a>
-        <a routerLink="/products" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
-          <i class="fas fa-box-open me-2"></i> المنتجات
-        </a>
-        <a routerLink="/stores" routerLinkActive="bg-gray-100 dark:bg-gray-800 text-primary dark:text-soft" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300">
-          <i class="fas fa-store-alt me-2"></i> المتاجر
-        </a>
-        <button (click)="goToLogin()" class="w-full text-right block px-3 py-2 rounded-md text-base font-medium text-white bg-primary">
-          <i class="fas fa-sign-in-alt me-2"></i> تسجيل الدخول
+  <!-- ===== الوسط: روابط + بحث ===== -->
+  <div class="navbar-center">
+
+    <!-- روابط للجميع -->
+    <a routerLink="/"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact:true}">
+      <i class="fas fa-home"></i> الرئيسية
+    </a>
+    <a routerLink="/products"
+       routerLinkActive="active">
+      <i class="fas fa-box-open"></i> المنتجات
+    </a>
+    <a routerLink="/stores"
+       routerLinkActive="active">
+      <i class="fas fa-store-alt"></i> المتاجر
+    </a>
+
+    <!-- رابط "عن المنصة" للزائر فقط -->
+    @if (!isLoggedIn()) {
+      <a routerLink="/about" routerLinkActive="active">
+        <i class="fas fa-info-circle"></i> عن المنصة
+      </a>
+    }
+
+    <!-- بحث -->
+    @if (showSearch()) {
+      <div class="search-bar">
+        <input type="text"
+               placeholder="ابحث عن منتج..."
+               [value]="searchQuery()"
+               (input)="updateSearch($any($event.target).value)"
+               (keyup.enter)="onSearch()" />
+        <button (click)="onSearch()">
+          <i class="fas fa-search"></i>
+        </button>
+        <button (click)="showSearch.set(false)">
+          <i class="fas fa-times"></i>
         </button>
       </div>
-    </div>
-  }
+    }
+  </div>
+
+  <!-- ===== الجانب الأيسر: أكشن ===== -->
+  <div class="navbar-actions">
+
+    <!-- زر البحث -->
+    <button class="icon-btn" (click)="showSearch.update(v => !v)">
+      <i class="fas fa-search"></i>
+    </button>
+
+    <!-- Dark mode toggle -->
+    <button class="icon-btn" (click)="themeService.toggle()">
+      @if (themeService.currentTheme() === 'light') {
+        <i class="fas fa-moon"></i>
+      } @else {
+        <i class="fas fa-sun"></i>
+      }
+    </button>
+
+    <!-- لو زائر: زرا الدخول والتسجيل -->
+    @if (!isLoggedIn()) {
+      <button class="btn-login" (click)="goToLogin()">
+        <i class="fas fa-sign-in-alt"></i>
+        دخول
+      </button>
+      <button class="btn-register" (click)="goToRegister()">
+        <i class="fas fa-user-plus"></i>
+        حساب جديد
+      </button>
+    }
+
+    <!-- لو مسجل: إشعارات + قائمة المستخدم -->
+    @if (isLoggedIn()) {
+
+      <!-- زر الإشعارات -->
+      <div class="notification-wrapper">
+        <button class="icon-btn" (click)="toggleNotifications()">
+          <i class="fas fa-bell"></i>
+          @if (unreadCount() > 0) {
+            <span class="badge">{{ unreadCount() }}</span>
+          }
+        </button>
+
+        <!-- قائمة الإشعارات -->
+        @if (showNotifications()) {
+          <div class="dropdown notifications-dropdown">
+            <div class="dropdown-header">
+              <span>الإشعارات</span>
+              <button (click)="markAllRead()">
+                <i class="fas fa-check-double"></i>
+                قراءة الكل
+              </button>
+            </div>
+            @for (notif of notifications(); track notif.id) {
+              <div class="notif-item"
+                   [class.unread]="!notif.read">
+                <i [class]="notif.icon"></i>
+                <div>
+                  <p>{{ notif.message }}</p>
+                  <small>{{ notif.time }}</small>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- قائمة المستخدم -->
+      <div class="user-wrapper">
+        <button class="user-btn" (click)="toggleUserMenu()">
+          <i class="fas fa-user-circle text-2xl"></i>
+          <span>{{ currentUser()?.name?.split(' ')?.[0] ?? '' }}</span>
+          <i class="fas fa-chevron-down text-xs"></i>
+        </button>
+
+        @if (showUserMenu()) {
+          <div class="dropdown user-dropdown">
+
+            <!-- معلومات المستخدم -->
+            <div class="user-info">
+              <i class="fas fa-user-circle text-3xl"></i>
+              <div>
+                <p class="user-name">{{ currentUser()?.name }}</p>
+                <p class="user-email">{{ currentUser()?.email }}</p>
+                <span class="role-badge">
+                  @if (role() === 'admin') { مدير النظام }
+                  @else if (role() === 'merchant') { تاجر }
+                  @else { مشتري }
+                </span>
+              </div>
+            </div>
+
+            <hr />
+
+            <!-- روابط حسب الـ role -->
+            <a (click)="goToProfile(); closeAll()">
+              <i class="fas fa-user"></i> حسابي
+            </a>
+
+            @if (role() === 'merchant') {
+              <a (click)="goToMerchant(); closeAll()">
+                <i class="fas fa-store"></i> لوحة التاجر
+              </a>
+            }
+
+            @if (role() === 'admin') {
+              <a (click)="goToAdmin(); closeAll()">
+                <i class="fas fa-cog"></i> لوحة الإدارة
+              </a>
+            }
+
+            <hr />
+
+            <a class="logout-btn" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Mobile hamburger -->
+    <button class="icon-btn md-hide"
+            (click)="isMobileMenuOpen.update(v => !v)">
+      <i [class]="isMobileMenuOpen() ? 'fas fa-times' : 'fas fa-bars'"></i>
+    </button>
+
+  </div>
+</div>
+
+<!-- Mobile Menu -->
+@if (isMobileMenuOpen()) {
+  <div class="mobile-menu">
+    <a routerLink="/" (click)="isMobileMenuOpen.set(false)">
+      <i class="fas fa-home"></i> الرئيسية
+    </a>
+    <a routerLink="/products" (click)="isMobileMenuOpen.set(false)">
+      <i class="fas fa-box-open"></i> المنتجات
+    </a>
+    <a routerLink="/stores" (click)="isMobileMenuOpen.set(false)">
+      <i class="fas fa-store-alt"></i> المتاجر
+    </a>
+
+    @if (!isLoggedIn()) {
+      <button (click)="goToLogin(); isMobileMenuOpen.set(false)">
+        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+      </button>
+      <button (click)="goToRegister(); isMobileMenuOpen.set(false)">
+        <i class="fas fa-user-plus"></i> إنشاء حساب
+      </button>
+    } @else {
+      <a (click)="goToProfile(); isMobileMenuOpen.set(false)">
+        <i class="fas fa-user"></i> حسابي
+      </a>
+      @if (role() === 'merchant') {
+        <a (click)="goToMerchant(); isMobileMenuOpen.set(false)">
+          <i class="fas fa-store"></i> لوحة التاجر
+        </a>
+      }
+      @if (role() === 'admin') {
+        <a (click)="goToAdmin(); isMobileMenuOpen.set(false)">
+          <i class="fas fa-cog"></i> لوحة الإدارة
+        </a>
+      }
+      <button (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+      </button>
+    }
+  </div>
+}
+
+<!-- Backdrop لإغلاق القوائم -->
+@if (showUserMenu() || showNotifications()) {
+  <div class="backdrop" (click)="closeAll()"></div>
+}
 </nav>

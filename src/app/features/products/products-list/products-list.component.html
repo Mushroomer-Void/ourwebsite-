@@ -1,0 +1,69 @@
+<div class="products-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1><i class="fas fa-box-open"></i> المنتجات</h1>
+    <p>{{ filteredProducts().length }} منتج متاح</p>
+  </div>
+
+  <!-- Search + Filters -->
+  <div class="filters-bar">
+    <!-- بحث -->
+    <div class="search-input">
+      <i class="fas fa-search"></i>
+      <input type="text"
+             placeholder="ابحث عن منتج أو متجر..."
+             [value]="searchQuery()"
+             (input)="updateSearch($any($event.target).value)" />
+    </div>
+
+    <!-- فلتر التصنيف -->
+    <div class="category-filters">
+      <button [class.active]="selectedCategory() === null"
+              (click)="selectCategory(null)">
+        <i class="fas fa-th"></i> الكل
+      </button>
+      @for (cat of categories(); track cat.id) {
+        <button [class.active]="selectedCategory() === cat.id"
+                (click)="selectCategory(cat.id)">
+          <i [class]="cat.icon"></i>
+          {{ cat.nameAr }}
+        </button>
+      }
+    </div>
+
+    <!-- ترتيب -->
+    <select (change)="sortBy.set($any($event.target).value)">
+      <option value="trending">الأكثر طلباً</option>
+      <option value="newest">الأحدث</option>
+      <option value="price-low">السعر: الأقل</option>
+      <option value="price-high">السعر: الأعلى</option>
+      <option value="rating">التقييم</option>
+    </select>
+  </div>
+
+  <!-- النتائج -->
+  @if (filteredProducts().length === 0) {
+    <div class="empty-state">
+      <i class="fas fa-search"></i>
+      <p>لا توجد منتجات تطابق بحثك</p>
+      <button (click)="searchQuery.set(''); selectedCategory.set(null)">
+        <i class="fas fa-times"></i> مسح الفلاتر
+      </button>
+    </div>
+  } @else {
+    <div class="products-grid">
+      @for (product of filteredProducts(); track product.id) {
+        <app-product-card
+          [product]="product"
+          (productClick)="goToProduct($event)"
+          (wishlistToggle)="toggleWishlist($event)"
+          (loginRequired)="showLoginPrompt.set(true)" />
+      }
+    </div>
+  }
+
+  <app-login-prompt
+    [isVisible]="showLoginPrompt()"
+    (closed)="showLoginPrompt.set(false)" />
+</div>

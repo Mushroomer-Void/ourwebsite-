@@ -1,0 +1,208 @@
+@if (product()) {
+<div class="product-details">
+
+  <!-- breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/">الرئيسية</a>
+    <i class="fas fa-chevron-left"></i>
+    <span>{{ getCategoryName(product()!.categoryId) }}</span>
+    <i class="fas fa-chevron-left"></i>
+    <span>{{ product()!.name }}</span>
+  </div>
+
+  <!-- القسم الرئيسي -->
+  <div class="main-section">
+
+    <!-- صورة المنتج -->
+    <div class="product-image-section">
+      @if (product()!.image) {
+        <img [src]="product()!.image" [alt]="product()!.name" />
+      } @else {
+        <div class="image-placeholder">
+          <i class="fas fa-image text-6xl"></i>
+        </div>
+      }
+      <!-- badges -->
+      <div class="badges">
+        @if (product()!.isNew) {
+          <span class="badge-new">
+            <i class="fas fa-star"></i> جديد
+          </span>
+        }
+        @if (product()!.isTrending) {
+          <span class="badge-trending">
+            <i class="fas fa-fire"></i> رائج
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- معلومات المنتج -->
+    <div class="product-info-section">
+
+      <!-- اسم المتجر -->
+      <div class="shop-name">
+        <i class="fas fa-store"></i>
+        {{ product()!.shopName }}
+      </div>
+
+      <!-- اسم المنتج -->
+      <h1>{{ product()!.name }}</h1>
+
+      <!-- التقييم -->
+      <div class="rating">
+        @for (star of getStars(); track star) {
+          <i class="fas fa-star"
+             [class.filled]="star <= averageRating()"></i>
+        }
+        <span>{{ averageRating() | number:'1.1-1' }}</span>
+        <span>({{ reviews().length }} تقييم)</span>
+        <span>
+          <i class="fas fa-shopping-bag"></i>
+          {{ product()!.ordersCount }} طلب
+        </span>
+      </div>
+
+      <!-- السعر -->
+      <div class="price-section">
+        @if (product()!.discountPrice) {
+          <span class="price-new">{{ product()!.discountPrice }} د.ل</span>
+          <span class="price-old">{{ product()!.price }} د.ل</span>
+          <span class="discount-badge">
+            خصم {{ ((product()!.price - product()!.discountPrice!) / product()!.price * 100) | number:'1.0-0' }}%
+          </span>
+        } @else {
+          <span class="price-new">{{ product()!.price }} د.ل</span>
+        }
+      </div>
+
+      <!-- الوصف -->
+      <div class="description">
+        <h3>وصف المنتج</h3>
+        <p>{{ product()!.description }}</p>
+      </div>
+
+      <!-- أزرار الطلب والمفضلة -->
+      <div class="action-buttons">
+        <button class="btn-order" (click)="order()">
+          <i class="fas fa-shopping-bag"></i>
+          اطلب الآن
+        </button>
+        <button class="btn-wishlist"
+                (click)="toggleWishlist()"
+                [class.active]="product()!.inWishlist">
+          <i [class]="product()!.inWishlist ? 'fas fa-heart' : 'far fa-heart'"></i>
+        </button>
+      </div>
+
+      <!-- بيانات المتجر وطرق التواصل -->
+      @if (shop()) {
+        <div class="shop-contact">
+          <h3>تواصل مع التاجر</h3>
+          <div class="contact-links">
+            @if (shop()!.socialLinks.whatsapp) {
+              <a [href]="'https://wa.me/' + shop()!.socialLinks.whatsapp"
+                 target="_blank" class="contact-whatsapp">
+                <i class="fab fa-whatsapp"></i>
+                واتساب
+              </a>
+            }
+            @if (shop()!.socialLinks.instagram) {
+              <a [href]="'https://instagram.com/' + shop()!.socialLinks.instagram"
+                 target="_blank" class="contact-instagram">
+                <i class="fab fa-instagram"></i>
+                انستقرام
+              </a>
+            }
+            @if (shop()!.socialLinks.facebook) {
+              <a [href]="'https://facebook.com/' + shop()!.socialLinks.facebook"
+                 target="_blank" class="contact-facebook">
+                <i class="fab fa-facebook"></i>
+                فيسبوك
+              </a>
+            }
+            @if (shop()!.socialLinks.tiktok) {
+              <a [href]="'https://tiktok.com/@' + shop()!.socialLinks.tiktok"
+                 target="_blank" class="contact-tiktok">
+                <i class="fab fa-tiktok"></i>
+                تيك توك
+              </a>
+            }
+            @if (shop()!.socialLinks.snapchat) {
+              <a [href]="'https://snapchat.com/add/' + shop()!.socialLinks.snapchat"
+                 target="_blank" class="contact-snapchat">
+                <i class="fab fa-snapchat"></i>
+                سناب
+              </a>
+            }
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+
+  <!-- قسم التقييمات -->
+  <div class="reviews-section">
+    <h2>
+      <i class="fas fa-star"></i>
+      التقييمات والمراجعات
+    </h2>
+
+    @for (review of reviews(); track review.id) {
+      <div class="review-card">
+        <div class="review-header">
+          <i class="fas fa-user-circle text-3xl"></i>
+          <div>
+            <div class="reviewer-name">{{ review.buyerName }}</div>
+            <div class="review-date">{{ review.date }}</div>
+          </div>
+          @if (review.verified) {
+            <span class="verified-badge">
+              <i class="fas fa-check-circle"></i>
+              مشتري موثّق
+            </span>
+          }
+        </div>
+        <div class="review-rating">
+          @for (star of getStars(); track star) {
+            <i class="fas fa-star"
+               [class.filled]="star <= review.rating"></i>
+          }
+        </div>
+        <p class="review-comment">{{ review.comment }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- منتجات مشابهة -->
+  @if (similarProducts().length > 0) {
+    <div class="similar-section">
+      <h2>
+        <i class="fas fa-th-large"></i>
+        منتجات مشابهة
+      </h2>
+      <div class="products-grid">
+        @for (product of similarProducts(); track product.id) {
+          <app-product-card
+            [product]="product"
+            (productClick)="goToProduct($event)"
+            (loginRequired)="showLoginPrompt.set(true)" />
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Login Prompt Modal -->
+  <app-login-prompt
+    [isVisible]="showLoginPrompt()"
+    (closed)="showLoginPrompt.set(false)" />
+
+</div>
+} @else {
+  <div class="not-found">
+    <i class="fas fa-box-open text-6xl"></i>
+    <h2>المنتج غير موجود</h2>
+    <a routerLink="/">العودة للرئيسية</a>
+  </div>
+}

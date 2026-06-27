@@ -1,1 +1,214 @@
-<h1>الصفحة الرئيسية - قريباً</h1>
+<!-- Splash Screen -->
+<app-splash-screen />
+
+<div class="space-y-12 pb-12">
+  
+  <!-- Hero Section for Guests -->
+  @if (!isLoggedIn()) {
+    <div class="hero-guest">
+      <div class="hero-content">
+        <h1>
+          <i class="fas fa-store"></i>
+          مرحباً بك في السوق الليبي
+        </h1>
+        <p>
+          منصة ذكية تجمع أفضل المشاريع الصغيرة والحرفيين في ليبيا
+          — تسوق بثقة، ادعم المحلي
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <i class="fas fa-store"></i>
+            <strong>+21</strong>
+            <span>متجر نشط</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-box"></i>
+            <strong>+89</strong>
+            <span>منتج متاح</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-users"></i>
+            <strong>+156</strong>
+            <span>عميل سعيد</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button (click)="goToRegister()">
+            <i class="fas fa-user-plus"></i>
+            ابدأ التسوق الآن — مجاناً
+          </button>
+          <button (click)="goToLogin()" class="outline">
+            <i class="fas fa-sign-in-alt"></i>
+            لدي حساب بالفعل
+          </button>
+        </div>
+      </div>
+      <div class="hero-features">
+        <div class="feature">
+          <i class="fas fa-shield-alt"></i>
+          <span>تسوق آمن وموثوق</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-medal"></i>
+          <span>تجار معتمدون</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-hand-holding-heart"></i>
+          <span>دعم المنتج المحلي</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-star"></i>
+          <span>تقييمات حقيقية</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Hero Carousel -->
+  <div class="carousel relative h-[400px] overflow-hidden rounded-2xl mx-4 mt-6 shadow-sm">
+    @for (banner of banners(); track banner.id; let i = $index) {
+      <div class="banner-slide absolute inset-0 flex flex-col items-center justify-center text-center p-8 transition-opacity duration-500"
+           [class.opacity-100]="i === currentBanner()"
+           [class.z-10]="i === currentBanner()"
+           [class.opacity-0]="i !== currentBanner()"
+           [class.z-0]="i !== currentBanner()"
+           [style.background-color]="banner.bgColor">
+        <i [class]="banner.icon + ' text-6xl text-white mb-6 drop-shadow-md'"></i>
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-4 drop-shadow-md">{{ banner.title }}</h2>
+        <p class="text-lg md:text-xl text-white/90 drop-shadow-sm">{{ banner.subtitle }}</p>
+      </div>
+    }
+    <!-- Dots Navigation -->
+    <div class="dots absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-20">
+      @for (banner of banners(); track banner.id; let i = $index) {
+        <button class="dot h-3 rounded-full transition-all duration-300"
+                [class.bg-white]="i === currentBanner()"
+                [class.w-8]="i === currentBanner()"
+                [class.w-3]="i !== currentBanner()"
+                [class.bg-white/50]="i !== currentBanner()"
+                (click)="currentBanner.set(i)">
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Active Season Banner -->
+  @if (activeSeason().isActive) {
+    <div [style.background-color]="activeSeason().bannerColor"
+         class="season-banner mx-4 p-4 rounded-xl text-white font-bold text-center flex items-center justify-center gap-3 shadow-md hover:opacity-95 transition-opacity cursor-pointer">
+      <i class="fas fa-graduation-cap text-xl"></i>
+      <span>{{ activeSeason().bannerText }}</span>
+    </div>
+  }
+
+  <!-- Categories -->
+  <section class="px-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">تصفح التصنيفات</h2>
+    <div class="categories-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+      @for (cat of categories(); track cat.id) {
+        <div class="category-card bg-white dark:bg-darkest border border-gray-100 dark:border-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer hover:shadow-md hover:border-primary/30 transition-all text-center" (click)="goToCategory(cat.id)">
+          <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl mb-2">
+            <i [class]="cat.icon"></i>
+          </div>
+          <span class="font-bold text-gray-900 dark:text-white">{{ cat.nameAr }}</span>
+          <small class="text-gray-500 dark:text-gray-400">{{ cat.productsCount }} منتج</small>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Trending Products -->
+  <section class="px-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      الأكثر طلباً <i class="fas fa-fire text-orange-500"></i>
+    </h2>
+    <div class="products-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      @for (product of trendingProducts(); track product.id) {
+        <app-product-card
+          [product]="product"
+          (wishlistToggle)="toggleWishlist($event)"
+          (loginRequired)="triggerLoginPrompt()"
+          (productClick)="goToProduct($event)" />
+      }
+    </div>
+  </section>
+
+  <!-- New Products -->
+  <section class="px-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      وصل حديثاً <i class="fas fa-star text-yellow-500"></i>
+    </h2>
+    <div class="products-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      @for (product of newProducts(); track product.id) {
+        <app-product-card
+          [product]="product"
+          (wishlistToggle)="toggleWishlist($event)"
+          (loginRequired)="triggerLoginPrompt()"
+          (productClick)="goToProduct($event)" />
+      }
+    </div>
+  </section>
+
+  <!-- Recommended Products -->
+  <section class="px-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      مقترح لك <i class="fas fa-thumbs-up text-blue-500"></i>
+    </h2>
+    <div class="products-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      @for (product of recommendedProducts(); track product.id) {
+        <app-product-card
+          [product]="product"
+          (wishlistToggle)="toggleWishlist($event)"
+          (loginRequired)="triggerLoginPrompt()"
+          (productClick)="goToProduct($event)" />
+      }
+    </div>
+  </section>
+
+  <!-- Popular Shops -->
+  <section class="px-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      متاجر مشهورة <i class="fas fa-store text-primary"></i>
+    </h2>
+    <div class="shops-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (shop of popularShops(); track shop.id) {
+        <div class="shop-card bg-white dark:bg-darkest border border-gray-100 dark:border-gray-800 rounded-2xl p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-md hover:border-primary/30 transition-all" (click)="goToShop(shop.id)">
+          <div class="w-20 h-20 rounded-full bg-gray-50 dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-400 mb-4 shadow-inner">
+            <i class="fas fa-store text-4xl"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ shop.name }}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">{{ shop.description }}</p>
+          
+          <div class="flex items-center gap-4 text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 bg-gray-50 dark:bg-gray-800/50 px-4 py-2 rounded-lg border border-gray-100 dark:border-gray-700 w-full justify-center">
+            <span class="flex items-center gap-1 text-yellow-500">
+              <i class="fas fa-star"></i> {{ shop.rating }}
+            </span>
+            <span class="text-gray-300 dark:text-gray-600">|</span>
+            <span class="flex items-center gap-1">
+              <i class="fas fa-users text-gray-400"></i> {{ shop.followersCount }}
+            </span>
+          </div>
+
+          <!-- Social Links -->
+          <div class="flex items-center justify-center gap-3 mt-auto">
+            @if (shop.socialLinks.whatsapp) {
+              <button class="w-8 h-8 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 flex items-center justify-center hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors">
+                <i class="fab fa-whatsapp"></i>
+              </button>
+            }
+            @if (shop.socialLinks.instagram) {
+              <button class="w-8 h-8 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 flex items-center justify-center hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-colors">
+                <i class="fab fa-instagram"></i>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <app-login-prompt
+    [isVisible]="showLoginPrompt()"
+    (closed)="closeLoginPrompt()" />
+
+</div>
